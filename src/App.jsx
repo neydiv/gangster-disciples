@@ -13,6 +13,8 @@ import {
   Zap,
   Send,
   ChevronRight,
+  Menu,
+  X,
 } from "lucide-react";
 import { FaDiscord } from "react-icons/fa";
 import { SiTiktok } from "react-icons/si";
@@ -33,6 +35,7 @@ function App() {
   const [hasEntered, setHasEntered] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
   const [hoveredRank, setHoveredRank] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const startExperience = async () => {
     setHasEntered(true);
@@ -120,6 +123,7 @@ function App() {
           <CustomCursor />
 
           {/* Header */}
+          {/* Header */}
           <motion.header
             initial={{
               x: "-50%",
@@ -140,18 +144,19 @@ function App() {
               mass: 0.8,
               delay: 0.15,
             }}
-            className="fixed left-1/2 top-5 z-50 w-[92%] max-w-7xl rounded-full border border-cyan-300/20 bg-black/40 px-5 py-3 backdrop-blur-xl shadow-[0_0_40px_rgba(0,245,255,0.15)]"
+            className="fixed left-1/2 top-4 z-50 w-[92%] max-w-7xl rounded-[2rem] border border-cyan-300/20 bg-black/45 px-4 py-3 backdrop-blur-xl shadow-[0_0_40px_rgba(0,245,255,0.15)] md:top-5 md:rounded-full md:px-5"
           >
-            <nav className="flex items-center justify-between">
+            <nav className="flex items-center justify-between gap-4">
               <a
                 href="#inicio"
-                className="group flex h-14 w-28 items-center justify-start"
+                className="group flex h-12 w-16 items-center justify-start md:h-14 md:w-28"
+                onClick={() => setIsMobileMenuOpen(false)}
               >
-                <div className="relative flex h-14 w-14 items-center justify-center rounded-full border border-cyan-300/20 bg-cyan-300/5 transition duration-300 group-hover:border-cyan-300/60 group-hover:bg-cyan-300/10 group-hover:shadow-[0_0_25px_rgba(0,245,255,0.35)]">
+                <div className="relative flex h-12 w-12 items-center justify-center rounded-full border border-cyan-300/20 bg-cyan-300/5 transition duration-300 group-hover:border-cyan-300/60 group-hover:bg-cyan-300/10 group-hover:shadow-[0_0_25px_rgba(0,245,255,0.35)] md:h-14 md:w-14">
                   <img
                     src={gdLogo}
                     alt="GD Logo"
-                    className="h-12 w-12 object-contain drop-shadow-[0_0_14px_rgba(0,245,255,0.55)] transition duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_24px_rgba(0,245,255,0.9)]"
+                    className="h-10 w-10 object-contain drop-shadow-[0_0_14px_rgba(0,245,255,0.55)] transition duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_24px_rgba(0,245,255,0.9)] md:h-12 md:w-12"
                   />
                 </div>
               </a>
@@ -168,16 +173,52 @@ function App() {
                 ))}
               </div>
 
-              <a
-                href="https://discord.gg/nrrjKzGNAB"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-cyan-300/40 bg-cyan-300/10 px-5 py-2 text-sm font-bold text-cyan-200 transition hover:bg-cyan-300 hover:text-black hover:shadow-[0_0_25px_rgba(0,245,255,0.8)]"
-              >
-                <FaDiscord size={18} />
-                Discord
-              </a>
+              <div className="flex items-center gap-3">
+                <a
+                  href="https://discord.gg/nrrjKzGNAB"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-cyan-300/40 bg-cyan-300/10 px-4 py-2 text-sm font-bold text-cyan-200 transition hover:bg-cyan-300 hover:text-black hover:shadow-[0_0_25px_rgba(0,245,255,0.8)] md:px-5"
+                >
+                  <FaDiscord size={18} />
+                  <span className="hidden sm:inline">Discord</span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-cyan-300/30 bg-cyan-300/10 text-cyan-200 transition hover:bg-cyan-300 hover:text-black lg:hidden"
+                  aria-label="Abrir menú"
+                >
+                  {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                </button>
+              </div>
             </nav>
+
+            <AnimatePresence>
+              {isMobileMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: "auto" }}
+                  exit={{ opacity: 0, y: -10, height: 0 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                  className="overflow-hidden lg:hidden"
+                >
+                  <div className="mt-4 grid gap-2 border-t border-white/10 pt-4">
+                    {navItems.map((item) => (
+                      <a
+                        key={item.label}
+                        href={item.href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-semibold text-zinc-300 transition hover:border-cyan-300/50 hover:bg-cyan-300/10 hover:text-cyan-200"
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.header>
 
           {/* Hero */}
@@ -382,13 +423,16 @@ function App() {
                 {hierarchy.map((item, index) => (
                   <motion.div
                     key={item.rank}
-                    className="relative z-10"
+                    className={`relative ${hoveredRank === item.rank ? "z-50" : "z-10"}`}
                     initial={{ opacity: 0, y: 35 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.08 }}
                     onMouseEnter={() => setHoveredRank(item.rank)}
                     onMouseLeave={() => setHoveredRank(null)}
+                    onClick={() =>
+                      setHoveredRank((current) => (current === item.rank ? null : item.rank))
+                    }
                   >
                     <motion.div
                       whileHover={{ y: -8, scale: 1.025 }}
@@ -435,7 +479,7 @@ function App() {
                     <AnimatePresence>
                       {hoveredRank === item.rank && (
                         <motion.div
-                          className="absolute left-1/2 top-[calc(100%+18px)] z-50 flex w-max -translate-x-1/2 gap-4"
+                          className="relative z-50 mt-5 grid w-full gap-3 sm:grid-cols-3 md:absolute md:left-1/2 md:top-[calc(100%+18px)] md:mt-0 md:flex md:w-max md:-translate-x-1/2 md:gap-4"
                           initial={{ opacity: 0, y: -10, scale: 0.96 }}
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           exit={{ opacity: 0, y: -10, scale: 0.96 }}
@@ -448,7 +492,7 @@ function App() {
                               animate={{ opacity: 1, y: 0, scale: 1 }}
                               exit={{ opacity: 0, y: 10, scale: 0.92 }}
                               transition={{ delay: memberIndex * 0.06 }}
-                              className="relative min-w-[170px] overflow-hidden rounded-2xl bg-[linear-gradient(145deg,rgba(0,245,255,0.2),rgba(255,255,255,0.04))] p-[1px] shadow-[0_0_30px_rgba(0,245,255,0.18)]"
+                              className="relative w-full overflow-hidden rounded-2xl bg-[linear-gradient(145deg,rgba(0,245,255,0.2),rgba(255,255,255,0.04))] p-[1px] shadow-[0_0_30px_rgba(0,245,255,0.18)] md:min-w-[170px]"
                             >
                               <div className="relative rounded-2xl bg-black/85 p-5 text-center backdrop-blur-xl">
                                 <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-cyan-300/15 blur-2xl" />
@@ -475,9 +519,9 @@ function App() {
               </div>
             </div>
           </section>
-          
 
-          
+
+
 
           {/* Application */}
           <section id="postular" className="relative overflow-hidden px-6 py-24">
