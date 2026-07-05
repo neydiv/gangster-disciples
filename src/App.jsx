@@ -93,6 +93,31 @@ function App() {
     };
   }, []);
 
+
+  const handleNavClick = (event, href) => {
+    event.preventDefault();
+
+    const sectionId = href.replace("#", "");
+
+    setIsMobileMenuOpen(false);
+
+    setTimeout(() => {
+      const section = document.getElementById(sectionId);
+
+      if (!section) return;
+
+      const headerOffset = 110;
+      const sectionPosition = section.getBoundingClientRect().top + window.scrollY;
+
+      window.scrollTo({
+        top: sectionPosition - headerOffset,
+        behavior: "smooth",
+      });
+
+      window.history.pushState(null, "", href);
+    }, 120);
+  };
+
   const navItems = [
     {
       label: "Inicio",
@@ -176,6 +201,7 @@ function App() {
           <CustomCursor />
 
           {/* Header */}
+
           {/* Header */}
           <motion.header
             initial={{
@@ -197,19 +223,20 @@ function App() {
               mass: 0.8,
               delay: 0.15,
             }}
-            className={`fixed left-1/2 z-50 w-[92%] max-w-7xl px-4 py-3 backdrop-blur-xl transition-all duration-500 md:px-5 ${isHeaderScrolled
-              ? "top-4 rounded-[2rem] border border-cyan-300/20 bg-black/60 shadow-[0_0_40px_rgba(0,245,255,0.18)] md:top-5 md:rounded-full"
-              : "top-5 rounded-full border border-transparent bg-black/5 shadow-none"
+            className={`fixed left-1/2 z-50 w-[92%] max-w-7xl backdrop-blur-xl transition-all duration-500 ${isHeaderScrolled
+              ? "top-3 rounded-[1.7rem] border border-cyan-300/20 bg-black/70 px-4 py-3 shadow-[0_0_40px_rgba(0,245,255,0.18)] sm:top-4 md:top-5 md:rounded-full md:px-5"
+              : "top-3 rounded-[1.7rem] border border-cyan-300/5 bg-black/20 px-4 py-3 shadow-none sm:top-4 md:top-5 md:rounded-full md:px-5"
               }`}
           >
-            <nav className="flex items-center justify-between gap-4">
+            <nav className="flex items-center justify-between gap-3">
+              {/* Logo */}
               <a
                 href="#inicio"
-                className="group flex h-12 w-16 items-center justify-start md:h-14 md:w-28"
-                onClick={() => setIsMobileMenuOpen(false)}
+                className="group flex h-11 w-14 items-center justify-start sm:h-12 sm:w-20 md:h-14 md:w-28"
+                onClick={(event) => handleNavClick(event, "#inicio")}
               >
                 <div
-                  className={`relative flex h-12 w-12 items-center justify-center rounded-full transition duration-300 md:h-14 md:w-14 ${isHeaderScrolled
+                  className={`relative flex h-11 w-11 items-center justify-center rounded-full transition duration-300 sm:h-12 sm:w-12 md:h-14 md:w-14 ${isHeaderScrolled
                     ? "border border-cyan-300/25 bg-cyan-300/5 shadow-[0_0_22px_rgba(0,245,255,0.15)]"
                     : "border border-cyan-300/10 bg-transparent"
                     } group-hover:border-cyan-300/60 group-hover:bg-cyan-300/10 group-hover:shadow-[0_0_25px_rgba(0,245,255,0.35)]`}
@@ -217,11 +244,12 @@ function App() {
                   <img
                     src={gdLogo}
                     alt="GD Logo"
-                    className="h-10 w-10 object-contain drop-shadow-[0_0_14px_rgba(0,245,255,0.55)] transition duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_24px_rgba(0,245,255,0.9)] md:h-12 md:w-12"
+                    className="h-9 w-9 object-contain drop-shadow-[0_0_14px_rgba(0,245,255,0.55)] transition duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_24px_rgba(0,245,255,0.9)] sm:h-10 sm:w-10 md:h-12 md:w-12"
                   />
                 </div>
               </a>
 
+              {/* Desktop Menu */}
               <div className="hidden items-center gap-7 lg:flex">
                 {navItems.map((item) => {
                   const sectionId = item.href.replace("#", "");
@@ -231,6 +259,7 @@ function App() {
                     <a
                       key={item.label}
                       href={item.href}
+                      onClick={(event) => handleNavClick(event, item.href)}
                       className={`relative text-sm font-semibold transition after:absolute after:-bottom-2 after:left-0 after:h-[2px] after:rounded-full after:bg-cyan-300 after:shadow-[0_0_10px_rgba(0,245,255,0.9)] after:transition-all hover:text-cyan-300 hover:drop-shadow-[0_0_10px_#00f5ff] ${isActive
                         ? "text-cyan-200 after:w-full"
                         : "text-zinc-300 after:w-0 hover:after:w-full"
@@ -242,12 +271,13 @@ function App() {
                 })}
               </div>
 
-              <div className="flex items-center gap-3">
+              {/* Right Actions */}
+              <div className="flex items-center gap-2 sm:gap-3">
                 <a
                   href="https://discord.gg/TU-INVITE"
                   target="_blank"
                   rel="noreferrer"
-                  className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-bold transition md:px-5 ${isHeaderScrolled
+                  className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-bold transition sm:px-4 sm:text-sm md:px-5 ${isHeaderScrolled
                     ? "border-cyan-300/40 bg-cyan-300/10 text-cyan-200 hover:bg-cyan-300 hover:text-black hover:shadow-[0_0_25px_rgba(0,245,255,0.8)]"
                     : "border-cyan-300/25 bg-black/20 text-cyan-100 hover:border-cyan-300/60 hover:bg-cyan-300 hover:text-black hover:shadow-[0_0_25px_rgba(0,245,255,0.75)]"
                     }`}
@@ -267,6 +297,7 @@ function App() {
               </div>
             </nav>
 
+            {/* Mobile Menu */}
             <AnimatePresence>
               {isMobileMenuOpen && (
                 <motion.div
@@ -285,10 +316,10 @@ function App() {
                         <a
                           key={item.label}
                           href={item.href}
-                          onClick={() => setIsMobileMenuOpen(false)}
+                          onClick={(event) => handleNavClick(event, item.href)}
                           className={`rounded-2xl border px-4 py-3 text-sm font-semibold transition ${isActive
-                            ? "border-cyan-300/50 bg-cyan-300/10 text-cyan-200 shadow-[0_0_18px_rgba(0,245,255,0.16)]"
-                            : "border-white/10 bg-white/[0.04] text-zinc-300 hover:border-cyan-300/50 hover:bg-cyan-300/10 hover:text-cyan-200"
+                              ? "border-cyan-300/50 bg-cyan-300/10 text-cyan-200 shadow-[0_0_18px_rgba(0,245,255,0.16)]"
+                              : "border-white/10 bg-white/[0.04] text-zinc-300 hover:border-cyan-300/50 hover:bg-cyan-300/10 hover:text-cyan-200"
                             }`}
                         >
                           {item.label}
