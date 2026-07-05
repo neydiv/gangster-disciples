@@ -53,16 +53,8 @@ function App() {
       href: "#inicio",
     },
     {
-      label: "Trayectoria",
-      href: "#identidad",
-    },
-    {
       label: "Jerarquía",
       href: "#jerarquia",
-    },
-    {
-      label: "Código GD",
-      href: "#codigo",
     },
     {
       label: "Postular",
@@ -292,7 +284,7 @@ function App() {
           </section>
 
           {/* Trajectory */}
-          <section id="identidad" className="relative overflow-hidden px-6 py-24">
+          {/* <section id="identidad" className="relative overflow-hidden px-6 py-24">
             <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_left,rgba(0,245,255,0.10),transparent_35%)]" />
 
             <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[0.85fr_1.15fr]">
@@ -375,7 +367,7 @@ function App() {
                 ))}
               </div>
             </div>
-          </section>
+          </section> */}
 
           {/* Hierarchy */}
           <section id="jerarquia" className="relative overflow-visible px-6 py-24">
@@ -483,65 +475,9 @@ function App() {
               </div>
             </div>
           </section>
-          {/* Code */}
-          <section id="codigo" className="px-6 py-24">
-            <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">
-                  Código GD
-                </p>
-                <h2 className="font-display mt-4 text-4xl font-semibold leading-tight tracking-[0.03em] md:text-5xl">
-                  Orden, respeto y rol limpio.
-                </h2>
-                <p className="mt-5 leading-8 text-zinc-400">
-                  Esta sección servirá para mostrar las normas IC y OOC de la facción,
-                  manteniendo una presentación seria y fácil de leer.
-                </p>
-              </div>
+          
 
-              <div className="grid gap-4">
-                {[
-                  "Respetar la jerarquía interna de GD.",
-                  "Mantener buen rol dentro del servidor.",
-                  "No usar información OOC dentro del personaje.",
-                  "Cuidar la imagen de la facción en cada situación RP.",
-                ].map((rule, index) => (
-                  <motion.div
-                    key={rule}
-                    initial={{ opacity: 0, x: 30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.08 }}
-                    className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur transition hover:border-cyan-300/40"
-                  >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan-300/10 text-cyan-200">
-                      <Lock size={20} />
-                    </div>
-                    <p className="font-semibold text-zinc-200">{rule}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Gallery */}
-          <section id="galeria" className="px-6 py-24">
-            <div className="mx-auto max-w-7xl">
-              <SectionTitle
-                eyebrow="Galería"
-                title="Presencia GD en Baje de Pepa RP"
-                text="Aquí luego podemos agregar capturas reales de reuniones, eventos, autos, zonas y momentos de rol."
-              />
-
-              <div className="mt-12 overflow-hidden rounded-[2rem] border border-cyan-300/20 bg-white/[0.04] p-3 shadow-[0_0_45px_rgba(0,245,255,0.12)]">
-                <img
-                  src={teamImage}
-                  alt="GD Team"
-                  className="h-[520px] w-full rounded-[1.5rem] object-cover opacity-90 transition duration-500 hover:scale-[1.02]"
-                />
-              </div>
-            </div>
-          </section>
+          
 
           {/* Application */}
           <section id="postular" className="relative overflow-hidden px-6 py-24">
