@@ -223,7 +223,7 @@ function App() {
               mass: 0.8,
               delay: 0.15,
             }}
-            className={`fixed left-1/2 z-50 w-[92%] max-w-7xl backdrop-blur-xl transition-all duration-500 ${isHeaderScrolled
+            className={`fixed left-1/2 z-[9999] w-[92%] max-w-7xl backdrop-blur-xl transition-all duration-500 ${isHeaderScrolled
               ? "top-3 rounded-[1.7rem] border border-cyan-300/20 bg-black/70 px-4 py-3 shadow-[0_0_40px_rgba(0,245,255,0.18)] sm:top-4 md:top-5 md:rounded-full md:px-5"
               : "top-3 rounded-[1.7rem] border border-cyan-300/5 bg-black/20 px-4 py-3 shadow-none sm:top-4 md:top-5 md:rounded-full md:px-5"
               }`}
@@ -318,8 +318,8 @@ function App() {
                           href={item.href}
                           onClick={(event) => handleNavClick(event, item.href)}
                           className={`rounded-2xl border px-4 py-3 text-sm font-semibold transition ${isActive
-                              ? "border-cyan-300/50 bg-cyan-300/10 text-cyan-200 shadow-[0_0_18px_rgba(0,245,255,0.16)]"
-                              : "border-white/10 bg-white/[0.04] text-zinc-300 hover:border-cyan-300/50 hover:bg-cyan-300/10 hover:text-cyan-200"
+                            ? "border-cyan-300/50 bg-cyan-300/10 text-cyan-200 shadow-[0_0_18px_rgba(0,245,255,0.16)]"
+                            : "border-white/10 bg-white/[0.04] text-zinc-300 hover:border-cyan-300/50 hover:bg-cyan-300/10 hover:text-cyan-200"
                             }`}
                         >
                           {item.label}
@@ -534,7 +534,7 @@ function App() {
                 {hierarchy.map((item, index) => (
                   <motion.div
                     key={item.rank}
-                    className={`relative ${hoveredRank === item.rank ? "z-50" : "z-10"}`}
+                    className={`relative ${hoveredRank === item.rank ? "z-30" : "z-10"}`}
                     initial={{ opacity: 0, y: 35 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -590,7 +590,7 @@ function App() {
                     <AnimatePresence>
                       {hoveredRank === item.rank && (
                         <motion.div
-                          className="relative z-50 mt-5 grid w-full gap-3 sm:grid-cols-3 md:absolute md:left-1/2 md:top-[calc(100%+18px)] md:mt-0 md:flex md:w-max md:-translate-x-1/2 md:gap-4"
+                          className="relative z-40 mt-5 grid w-full gap-3 sm:grid-cols-3 md:absolute md:left-1/2 md:top-[calc(100%+18px)] md:mt-0 md:flex md:w-max md:-translate-x-1/2 md:gap-4"
                           initial={{ opacity: 0, y: -10, scale: 0.96 }}
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           exit={{ opacity: 0, y: -10, scale: 0.96 }}
