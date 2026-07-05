@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MusicIntroGate from "./components/MusicIntroGate";
 import { AnimatePresence, motion } from "motion/react";
 import IntroLoader from "./components/IntroLoader";
@@ -30,12 +30,21 @@ import bdpLogo from "./assets/logos/bdp-logo.png";
 import fivemLogo from "./assets/logos/fivem-logo.png";
 import teamImage from "./assets/gallery/gd-team-main.png";
 
+
+import neyPhoto from "./assets/members/ney.png";
+import neymarPhoto from "./assets/members/neymar.png";
+import dragonPhoto from "./assets/members/dragon.png";
+import whysinoPhoto from "./assets/members/whysino.jpg";
+import saperokoPhoto from "./assets/members/saperoko.png";
+
 function App() {
   const audioRef = useRef(null);
   const [hasEntered, setHasEntered] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
   const [hoveredRank, setHoveredRank] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isHeaderScrolled, setIsHeaderScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("inicio");
 
   const startExperience = async () => {
     setHasEntered(true);
@@ -49,6 +58,40 @@ function App() {
       console.log("El navegador bloqueó la música:", error);
     }
   };
+
+
+
+  useEffect(() => {
+    const sectionIds = ["inicio", "jerarquia", "postular"];
+
+    const handleScroll = () => {
+      setIsHeaderScrolled(window.scrollY > 25);
+
+      let currentSection = "inicio";
+
+      sectionIds.forEach((id) => {
+        const section = document.getElementById(id);
+
+        if (section) {
+          const sectionTop = section.offsetTop - 180;
+
+          if (window.scrollY >= sectionTop) {
+            currentSection = id;
+          }
+        }
+      });
+
+      setActiveSection(currentSection);
+    };
+
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const navItems = [
     {
@@ -88,19 +131,29 @@ function App() {
       icon: <Crown />,
       rank: "Jefes",
       desc: "Marcan la dirección, el orden y las decisiones más importantes de la facción.",
-      members: ["Litzen", "Ney", "Arlequin"],
+      members: [
+        { name: "Litzen", photo: null },
+        { name: "Ney", photo: neyPhoto },
+        { name: "Arlequin", photo: null },
+      ],
     },
     {
       icon: <Star />,
       rank: "Mano derecha",
       desc: "Coordina movimientos clave y mantiene la conexión entre liderazgo y organización.",
-      members: ["Saperoko"],
+      members: [
+        { name: "Saperoko", photo: saperokoPhoto },
+      ],
     },
     {
       icon: <Skull />,
       rank: "Sub Jefes",
       desc: "Apoyan la organización interna, guían miembros y mantienen la presencia activa de GD.",
-      members: ["Neymar", "Dragon", "Whysiño"],
+      members: [
+        { name: "Neymar", photo: neymarPhoto },
+        { name: "Dragon", photo: dragonPhoto },
+        { name: "Whysiño", photo: whysinoPhoto },
+      ],
     },
   ];
 
@@ -144,7 +197,10 @@ function App() {
               mass: 0.8,
               delay: 0.15,
             }}
-            className="fixed left-1/2 top-4 z-50 w-[92%] max-w-7xl rounded-[2rem] border border-cyan-300/20 bg-black/45 px-4 py-3 backdrop-blur-xl shadow-[0_0_40px_rgba(0,245,255,0.15)] md:top-5 md:rounded-full md:px-5"
+            className={`fixed left-1/2 z-50 w-[92%] max-w-7xl px-4 py-3 backdrop-blur-xl transition-all duration-500 md:px-5 ${isHeaderScrolled
+              ? "top-4 rounded-[2rem] border border-cyan-300/20 bg-black/60 shadow-[0_0_40px_rgba(0,245,255,0.18)] md:top-5 md:rounded-full"
+              : "top-5 rounded-full border border-transparent bg-black/5 shadow-none"
+              }`}
           >
             <nav className="flex items-center justify-between gap-4">
               <a
@@ -152,7 +208,12 @@ function App() {
                 className="group flex h-12 w-16 items-center justify-start md:h-14 md:w-28"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                <div className="relative flex h-12 w-12 items-center justify-center rounded-full border border-cyan-300/20 bg-cyan-300/5 transition duration-300 group-hover:border-cyan-300/60 group-hover:bg-cyan-300/10 group-hover:shadow-[0_0_25px_rgba(0,245,255,0.35)] md:h-14 md:w-14">
+                <div
+                  className={`relative flex h-12 w-12 items-center justify-center rounded-full transition duration-300 md:h-14 md:w-14 ${isHeaderScrolled
+                    ? "border border-cyan-300/25 bg-cyan-300/5 shadow-[0_0_22px_rgba(0,245,255,0.15)]"
+                    : "border border-cyan-300/10 bg-transparent"
+                    } group-hover:border-cyan-300/60 group-hover:bg-cyan-300/10 group-hover:shadow-[0_0_25px_rgba(0,245,255,0.35)]`}
+                >
                   <img
                     src={gdLogo}
                     alt="GD Logo"
@@ -162,23 +223,34 @@ function App() {
               </a>
 
               <div className="hidden items-center gap-7 lg:flex">
-                {navItems.map((item) => (
-                  <a
-                    key={item.label}
-                    href={item.href}
-                    className="text-sm font-medium text-zinc-300 transition hover:text-cyan-300 hover:drop-shadow-[0_0_10px_#00f5ff]"
-                  >
-                    {item.label}
-                  </a>
-                ))}
+                {navItems.map((item) => {
+                  const sectionId = item.href.replace("#", "");
+                  const isActive = activeSection === sectionId;
+
+                  return (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      className={`relative text-sm font-semibold transition after:absolute after:-bottom-2 after:left-0 after:h-[2px] after:rounded-full after:bg-cyan-300 after:shadow-[0_0_10px_rgba(0,245,255,0.9)] after:transition-all hover:text-cyan-300 hover:drop-shadow-[0_0_10px_#00f5ff] ${isActive
+                        ? "text-cyan-200 after:w-full"
+                        : "text-zinc-300 after:w-0 hover:after:w-full"
+                        }`}
+                    >
+                      {item.label}
+                    </a>
+                  );
+                })}
               </div>
 
               <div className="flex items-center gap-3">
                 <a
-                  href="https://discord.gg/nrrjKzGNAB"
+                  href="https://discord.gg/TU-INVITE"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-cyan-300/40 bg-cyan-300/10 px-4 py-2 text-sm font-bold text-cyan-200 transition hover:bg-cyan-300 hover:text-black hover:shadow-[0_0_25px_rgba(0,245,255,0.8)] md:px-5"
+                  className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-bold transition md:px-5 ${isHeaderScrolled
+                    ? "border-cyan-300/40 bg-cyan-300/10 text-cyan-200 hover:bg-cyan-300 hover:text-black hover:shadow-[0_0_25px_rgba(0,245,255,0.8)]"
+                    : "border-cyan-300/25 bg-black/20 text-cyan-100 hover:border-cyan-300/60 hover:bg-cyan-300 hover:text-black hover:shadow-[0_0_25px_rgba(0,245,255,0.75)]"
+                    }`}
                 >
                   <FaDiscord size={18} />
                   <span className="hidden sm:inline">Discord</span>
@@ -205,16 +277,24 @@ function App() {
                   className="overflow-hidden lg:hidden"
                 >
                   <div className="mt-4 grid gap-2 border-t border-white/10 pt-4">
-                    {navItems.map((item) => (
-                      <a
-                        key={item.label}
-                        href={item.href}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-semibold text-zinc-300 transition hover:border-cyan-300/50 hover:bg-cyan-300/10 hover:text-cyan-200"
-                      >
-                        {item.label}
-                      </a>
-                    ))}
+                    {navItems.map((item) => {
+                      const sectionId = item.href.replace("#", "");
+                      const isActive = activeSection === sectionId;
+
+                      return (
+                        <a
+                          key={item.label}
+                          href={item.href}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className={`rounded-2xl border px-4 py-3 text-sm font-semibold transition ${isActive
+                            ? "border-cyan-300/50 bg-cyan-300/10 text-cyan-200 shadow-[0_0_18px_rgba(0,245,255,0.16)]"
+                            : "border-white/10 bg-white/[0.04] text-zinc-300 hover:border-cyan-300/50 hover:bg-cyan-300/10 hover:text-cyan-200"
+                            }`}
+                        >
+                          {item.label}
+                        </a>
+                      );
+                    })}
                   </div>
                 </motion.div>
               )}
@@ -487,7 +567,7 @@ function App() {
                         >
                           {item.members.map((member, memberIndex) => (
                             <motion.div
-                              key={member}
+                              key={member.name}
                               initial={{ opacity: 0, y: 12, scale: 0.9 }}
                               animate={{ opacity: 1, y: 0, scale: 1 }}
                               exit={{ opacity: 0, y: 10, scale: 0.92 }}
@@ -497,12 +577,20 @@ function App() {
                               <div className="relative rounded-2xl bg-black/85 p-5 text-center backdrop-blur-xl">
                                 <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-cyan-300/15 blur-2xl" />
 
-                                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-cyan-300/10 text-cyan-200 shadow-[inset_0_0_16px_rgba(0,245,255,0.22)]">
-                                  <Users size={22} />
+                                <div className="mx-auto flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border border-cyan-300/35 bg-cyan-300/10 text-cyan-200 shadow-[0_0_22px_rgba(0,245,255,0.28)]">
+                                  {member.photo ? (
+                                    <img
+                                      src={member.photo}
+                                      alt={member.name}
+                                      className="h-full w-full object-cover"
+                                    />
+                                  ) : (
+                                    <Users size={25} />
+                                  )}
                                 </div>
 
                                 <h4 className="mt-4 text-xl font-bold text-white">
-                                  {member}
+                                  {member.name}
                                 </h4>
 
                                 <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-cyan-200/80">

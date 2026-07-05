@@ -586,3 +586,14 @@ body {
     0 0 10px rgba(0, 245, 255, 0.9),
     0 0 22px rgba(0, 245, 255, 0.55);
 }
+
+
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+a img {
+  pointer-events: auto;
+}
