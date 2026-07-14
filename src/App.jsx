@@ -36,6 +36,8 @@ import neymarPhoto from "./assets/members/neymar.png";
 import dragonPhoto from "./assets/members/dragon.png";
 import whysinoPhoto from "./assets/members/whysino.jpg";
 import saperokoPhoto from "./assets/members/saperoko.png";
+import nikitoPhoto from "./assets/members/nikito.png";
+import arlequinPhoto from "./assets/members/arlequin.webp";
 
 function App() {
   const audioRef = useRef(null);
@@ -157,9 +159,9 @@ function App() {
       rank: "Jefes",
       desc: "Marcan la dirección, el orden y las decisiones más importantes de la facción.",
       members: [
-        { name: "Litzen", photo: null },
+        { name: "Nikito", photo: nikitoPhoto },
         { name: "Ney", photo: neyPhoto },
-        { name: "Arlequin", photo: null },
+        { name: "Arlequin", photo: arlequinPhoto }, 
       ],
     },
     {
